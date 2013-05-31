@@ -30,7 +30,7 @@ module Guard
 
           return false if paths.empty?
 
-          unless phpunit_exists?
+          unless phpunit_exists?(options)
             UI.error('phpunit is not installed on your machine.', :reset => true)
             return false
           end
@@ -45,8 +45,11 @@ module Guard
         #
         # @return [Boolean] The status of phpunit
         #
-        def phpunit_exists?
-          `phpunit --version`
+        def phpunit_exists?(options)
+          cmd = "phpunit"
+          cmd = options[:command] if options[:command]
+          cmd << " --version"
+          `#{cmd}`
           true
         rescue Errno::ENOENT
           false
